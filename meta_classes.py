@@ -19,17 +19,21 @@ def is_abstract(cls):
 def yield_module_classes(module):
     for cls_name in dir(module):
         if not cls_name.startswith('_'):
-            yield cls_name, getattr(module, cls_name)
+            yield getattr(module, cls_name)
 
-def make_resource(cls_name, cls):
+def make_resource(cls):
+    
     class _cls_Resource(resources.ModelResource):
-        __class_name = '{name}Resource'.format(name=cls_name)
+        
 ##        make_resource.__class__.__name__ = __name__
         model = cls
+##
+##        def __str__(self):
+##            return self.__class_name+'()'
 
-        def __str__(self):
-            return self.__class_name+'()'
-
+    _class_name = '{name}Resource'.format(name=cls.__name__)
+    _cls_Resource.__name__ = _class_name
+    
     for attr in dir(cls):
         print attr
     return _cls_Resource
@@ -37,15 +41,15 @@ def make_resource(cls_name, cls):
 if __name__ == '__main__':
     a = list(yield_module_classes(classes))
     b = a[0]
-    c = a[-1][1]()
+    c = a[-1]()
     
-    for cls_name, cls in a:
+    for cls in a:
         obj = cls()
-        print (is_model(cls), is_abstract(cls), cls,
+        print (is_model(cls), is_abstract(cls), cls, cls.__name__, 
                obj.__class__.__name__, type(obj).__name__)
 
     e = a[-1]
-    d = make_resource(*e)
+    d = make_resource(e)
     print d, issubclass(d, resources.Resource), d()
 
     pass
