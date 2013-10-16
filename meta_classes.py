@@ -23,10 +23,15 @@ def yield_module_classes(module):
 
 def make_resource(cls_name, cls):
     class _cls_Resource(resources.ModelResource):
-        __name__ = '{name}Resource'.format(name=cls_name)
-        make_resource.__class__.__name__ = __name__
+        __class_name = '{name}Resource'.format(name=cls_name)
+##        make_resource.__class__.__name__ = __name__
         model = cls
 
+        def __str__(self):
+            return self.__class_name+'()'
+
+    for attr in dir(cls):
+        print attr
     return _cls_Resource
 
 if __name__ == '__main__':
@@ -39,7 +44,8 @@ if __name__ == '__main__':
         print (is_model(cls), is_abstract(cls), cls,
                obj.__class__.__name__, type(obj).__name__)
 
-    d = make_resource(*b)
-    print d, issubclass(d, resources.Resource)
+    e = a[-1]
+    d = make_resource(*e)
+    print d, issubclass(d, resources.Resource), d()
 
     pass

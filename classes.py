@@ -40,8 +40,17 @@ class CharField(Field):
         return 'CharField()'
     pass
 
+class ForeignKey(Field):
+    def __init__(self, *args, **kwargs):
+        super(ForeignKey, self).__init__(*args, **kwargs)
+    
+    def __str__(self):
+        return 'ForeignKey()'
+    pass
+
 class SomeModel(Model):
     field_name = CharField(max_length=100)
+    field_name2 = ForeignKey(Model, related_name='related_name')
     
     def __str__(self):
         return 'SomeModel()'
@@ -55,3 +64,4 @@ if __name__ == '__main__':
     print SomeModel()
     print OtherRandomClass()
     print OtherRandomClassAbstract()
+    print ForeignKey()
